@@ -3,8 +3,6 @@
 **Tools:** PostgreSQL, SQL (CTEs, window functions), Power BI, DAX
 **Data:** [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce): 96,470 delivered orders across 8 relational tables, Sept 2016 to Aug 2018
 
-![Dashboard](<img width="1552" height="742" alt="E-Commerce Delivery Perf" src="https://github.com/user-attachments/assets/33ebd266-cdda-4f8f-8c3d-24effbfc603b" />
-)
 
 ## Business Question
 
