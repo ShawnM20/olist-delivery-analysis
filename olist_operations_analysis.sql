@@ -1,18 +1,3 @@
--- =====================================================================
--- E-Commerce Delivery Performance & Customer Experience Analysis
--- Dataset: Brazilian E-Commerce Public Dataset by Olist (Kaggle)
--- Database: PostgreSQL
---
--- Business question:
---   What drives late deliveries, how much do they hurt customer
---   satisfaction, and where should the business focus to fix them?
--- =====================================================================
-
-
--- ---------------------------------------------------------------------
--- STEP 1: CREATE TABLES
--- ---------------------------------------------------------------------
-
 CREATE TABLE customers (
     customer_id               TEXT PRIMARY KEY,
     customer_unique_id        TEXT,
@@ -87,28 +72,6 @@ CREATE TABLE order_reviews (
 );
 
 
--- ---------------------------------------------------------------------
--- STEP 2: LOAD DATA
--- Run these in psql. Change the path to wherever you unzipped the files.
--- Load parent tables first so the foreign keys don't fail.
--- ---------------------------------------------------------------------
-
--- \copy customers            FROM 'olist_customers_dataset.csv'            CSV HEADER;
--- \copy sellers              FROM 'olist_sellers_dataset.csv'              CSV HEADER;
--- \copy products             FROM 'olist_products_dataset.csv'             CSV HEADER;
--- \copy category_translation FROM 'product_category_name_translation.csv'  CSV HEADER;
--- \copy orders               FROM 'olist_orders_dataset.csv'               CSV HEADER;
--- \copy order_items          FROM 'olist_order_items_dataset.csv'          CSV HEADER;
--- \copy order_payments       FROM 'olist_order_payments_dataset.csv'       CSV HEADER;
--- \copy order_reviews        FROM 'olist_order_reviews_dataset.csv'        CSV HEADER;
-
-
--- ---------------------------------------------------------------------
--- STEP 3: DATA QUALITY CHECKS
--- Write down what you find here. "Found X issues and handled them by Y"
--- is a strong talking point in interviews.
--- ---------------------------------------------------------------------
-
 -- Row counts per table
 SELECT 'customers' AS tbl, COUNT(*) FROM customers
 UNION ALL SELECT 'orders',         COUNT(*) FROM orders
@@ -137,12 +100,6 @@ FROM (
     HAVING COUNT(*) > 1
 ) t;
 
-
--- ---------------------------------------------------------------------
--- STEP 4: BUILD A CLEAN ANALYSIS VIEW
--- One row per delivered order, with delivery and review metrics.
--- This view also becomes the main table for your Power BI dashboard.
--- ---------------------------------------------------------------------
 
 CREATE OR REPLACE VIEW delivered_orders AS
 WITH order_revenue AS (
@@ -185,10 +142,6 @@ WHERE o.order_status = 'delivered'
   AND o.order_delivered_customer_date IS NOT NULL;
 
 
--- ---------------------------------------------------------------------
--- STEP 5: ANALYSIS QUERIES
--- ---------------------------------------------------------------------
-
 -- Q1. Monthly trend: orders, revenue, average order value, late rate
 SELECT
     order_month,
@@ -229,7 +182,7 @@ SELECT
     ROUND(AVG(review_score), 2)                AS avg_review
 FROM delivered_orders
 GROUP BY customer_state
-HAVING COUNT(*) >= 500        -- ignore states with too few orders to trust
+HAVING COUNT(*) >= 500        
 ORDER BY late_pct DESC;
 
 
